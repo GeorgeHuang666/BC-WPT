@@ -1,0 +1,72 @@
+simulator lang=spectre
+global 0
+include "/home/cadence/ic5141_usr6/tools/dfII/samples/artist/ahdlLib/quantity.spectre"
+parameters R_e=100 C_tsg=1.19p C_tgG=1p C_rsg=1.19p C_rgG=1p C_leak=0.35p \
+    C_air2=7.56p C_air=7.56p x=5 R_arm=26.6 C_arm=1.5n R_arm2=26.6 \
+    C_arm2=1.5n
+include "/home/huangyx/BCC_WPT/sim_ref/SMS7630.SP3"
+
+V0 (net10 Vin\-) vsource type=sine sinedc=1.5 ampl=1.5 freq=20M
+D6 (Vo2\- Vout2\+) sms7630
+D4 (Vo2\+ Vout2\+) sms7630
+D5 (Vout2\- Vo2\-) sms7630
+D3 (Vo\+ Vout\+) sms7630
+D0 (Vout\- Vo\-) sms7630
+D7 (Vout2\- Vo2\+) sms7630
+D1 (Vo\- Vout\+) sms7630
+D2 (Vout\- Vo\+) sms7630
+C48 (Vin\- net0170) capacitor c=C_tsg
+C49 (Vo\- net5) capacitor c=C_rsg
+C50 (Vo2\- net0123) capacitor c=C_rsg
+C32 (net5 net5) capacitor c=C_arm2
+C23 (net0254 0) capacitor c=C_leak
+C28 (net5 0) capacitor c=C_leak
+C29 (net5 0) capacitor c=C_leak
+C33 (Vo\- Vo2\-) capacitor c=C_air2
+C31 (net5 0) capacitor c=C_leak
+C27 (net5 net0123) capacitor c=C_arm2
+C30 (net0123 0) capacitor c=C_leak
+C18 (Vout\- Vout\+) capacitor c=100p
+C19 (Vout2\- Vout2\+) capacitor c=100p
+C20 (0 Vo2\-) capacitor c=C_rgG
+C17 (0 Vo\-) capacitor c=C_rgG
+C11 (net0160 0) capacitor c=C_leak
+C10 (net5 0) capacitor c=C_leak
+C24 (net0123 0) capacitor c=C_leak
+C9 (net5 net0160) capacitor c=C_arm
+C16 (0 Vin\-) capacitor c=C_tgG
+C8 (net0170 net5) capacitor c=C_arm
+C7 (net0170 0) capacitor c=C_leak
+C5 (net0170 0) capacitor c=C_leak
+C6 (net5 0) capacitor c=C_leak
+C4 (net0167 0) capacitor c=C_leak
+C3 (net0167 net0170) capacitor c=C_arm
+C15 (Vin\- Vo\-) capacitor c=C_air
+C25 (net0123 net0254) capacitor c=C_arm2
+R12 (net5 net0123) resistor r=R_arm2
+R11 (net0123 net0254) resistor r=R_arm2
+R14 (net5 net5) resistor r=R_arm2
+R13 (Vo2\+ net0123) resistor r=R_e
+R5 (net5 net0160) resistor r=R_arm
+R4 (net0170 net5) resistor r=R_arm
+R9 (Vout2\- Vout2\+) resistor r=2K
+R7 (Vo\+ net5) resistor r=R_e
+R8 (Vout\- Vout\+) resistor r=2K
+R3 (net0167 net0170) resistor r=R_arm
+R1 (Vin\+ net0170) resistor r=R_e
+R0 (net10 Vin\+) resistor r=50
+simulatorOptions options reltol=1e-3 vabstol=1e-6 iabstol=1e-12 temp=27 \
+    tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 maxnotes=5 maxwarns=5 \
+    digits=5 cols=80 pivrel=1e-3 sensfile="../psf/sens.output" \
+    checklimitdest=psf 
+tran tran stop=100u write="spectre.ic" writefinal="spectre.fc" \
+    annotate=status maxiters=5 
+finalTimeOP info what=oppoint where=rawfile
+modelParameter info what=models where=rawfile
+element info what=inst where=rawfile
+outputParameter info what=output where=rawfile
+designParamVals info what=parameters where=rawfile
+primitives info what=primitives where=rawfile
+subckts info what=subckts  where=rawfile
+save R0:1 
+saveOptions options save=allpub
